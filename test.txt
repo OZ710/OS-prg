@@ -1,4 +1,0 @@
-  RSUB
-  LDA ONE 
-  END
-

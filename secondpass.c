@@ -293,7 +293,7 @@ void main()
                     }  
                     if(opr[strlen(opr)-1]=='X' && opr[strlen(opr)-2]==',')
                     {
-                        char ind[10];
+                        char ind[10],rval[10];
                         ind[0]=opradr[0];
                         ind[1]='\0';
                         int n=atoi(ind);
@@ -302,14 +302,15 @@ void main()
                         opradr[0]=ind[0];
                         int l=0,r=0;
                         k=0;
+                        sprintf(rval,"%04s",opradr);
                         while(l<strlen(opval))
                         {
                             trec[i][l]=opval[l];
                             l++;
                         }
-                        while(r<strlen(opradr))
+                        while(r<strlen(rval))
                         {
-                            trec[i][l]=opradr[r]; 
+                            trec[i][l]=rval[r]; 
                             l++;
                             r++;
                         }
@@ -319,16 +320,18 @@ void main()
                     }
                     else
                     {
+                        char rval[10];
                         int l=0,r=0;
                         k=0;
+                        sprintf(rval,"%04s",opradr);
                         while(l<strlen(opval))
                         {
                             trec[i][l]=opval[l];
                             l++;
                         }
-                        while(r<strlen(opradr))
+                        while(r<strlen(rval))
                         {
-                            trec[i][l]=opradr[r]; 
+                            trec[i][l]=rval[r]; 
                             l++;
                             r++;
                         }
@@ -358,7 +361,7 @@ void main()
             if(count==2)
             {
                 int n=atoi(len[k++]);
-                fprintf(f2,"%x^",n);
+                fprintf(f2,"%02x^",n);
             }    
             
         }
