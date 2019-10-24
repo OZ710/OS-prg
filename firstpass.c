@@ -5,19 +5,39 @@ struct fp
  {
    char label[20],opcode[20],operand[20];
  }s[100];  
+
+int hexadecimalToDecimal(char hexVal[]) 
+{    
+    int len = strlen(hexVal); 
+    int base = 1; 
+    int dec_val = 0;  
+    for (int i=len-1; i>=0; i--) 
+    {     
+        if (hexVal[i]>='0' && hexVal[i]<='9') 
+        { 
+            dec_val += (hexVal[i] - 48)*base; 
+            base = base * 16; 
+        } 
+        else if (hexVal[i]>='A' && hexVal[i]<='F') 
+        { 
+            dec_val += (hexVal[i] - 55)*base;  
+            base = base*16; 
+        } 
+    } 
+      
+    return dec_val; 
+} 
 void main()
  {
-   FILE *f1,*f2,*f3,*f4;
+   FILE *f1,*f2,*f3,*f4,*f6;
    int i=0,j=0,k=0,count=0,loctr=0,space=0;//i to traverse the file,j to iterate single line of a file
    char inst[100],temp[100];
    f1 = fopen("firstpass.txt","r");
-   f2 = fopen("temp.txt","w");
-  
+   f2 = fopen("temp.txt","w"); 
    f4 = fopen("SYMTAB.txt","w");
    while(!feof(f1))
       {
          fgets(inst,100,f1);
-         //printf("%d\n",strlen(inst) );
          while(j<strlen(inst)-1)// to find the number of fields in each instruction
            {
              if(inst[j]==' ')
@@ -85,6 +105,34 @@ void main()
                     }
              }
            }
+         if(i==0)
+         {
+            f6=fopen("prg.txt","w");
+            j=0,k=0;
+            char tem[100];
+            if(count==3)
+            {
+                if(space==1)
+                {
+                    while(inst[j]==' ')
+                      j++;
+                    while(inst[j]!=' ')
+                      tem[k++]=inst[j++];
+                }
+                else
+                {
+                      while(inst[j]!=' ')
+                      tem[k++]=inst[j++];
+                }
+                tem[k]='\0';
+                
+                fprintf(f6,"%s",tem);
+            }
+            else
+            {
+                fprintf(f6,"------");
+            }
+         } 
           
          if(count==1)// single field(only opcode)
              {
@@ -291,8 +339,8 @@ void main()
    k=0;
    if(strcmp(s[i].opcode,"START")==0) //opcode is start
    {
-      stad=atoi(s[i].operand);
-      loctr=stad;
+      loctr=hexadecimalToDecimal(s[i].operand);
+      stad=loctr;
       sprintf(hex,"%x",loctr);
       fprintf(f2,"%s %s %s"," ",s[i].opcode,s[i].operand);
       i++;
