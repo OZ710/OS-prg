@@ -3,27 +3,38 @@
 #include<string.h>
 int hexadecimalToDecimal(char hexVal[]) 
 {    
-    int len = strlen(hexVal); 
+    int le = strlen(hexVal); 
     int base = 1; 
     int dec_val = 0;  
-    for (int i=len-1; i>=0; i--) 
+    for (int i=le-1; i>=0; i--) 
     {     
         if (hexVal[i]>='0' && hexVal[i]<='9') 
         { 
             dec_val += (hexVal[i] - 48)*base; 
             base = base * 16; 
         } 
-        else if (hexVal[i]>='A' && hexVal[i]<='F') 
+        else if ((hexVal[i]>='A' && hexVal[i]<='F') || (hexVal[i]>='a' && hexVal[i]<='f')) 
         { 
             dec_val += (hexVal[i] - 55)*base;  
             base = base*16; 
         } 
+printf("\n%d",dec_val);
     } 
       
     return dec_val; 
 } 
 void main()
 {
+     char optab[32][100]={"ADD","ADDF","AND","COMP","DIV",
+                  "J","JEQ","JGT","JLT","JSUB","LDA",
+                  "LDB","LDCH","LDL","LDX","LPS","MUL",
+                  "RD","OR","RSUB","SSK","STA","STB","STCH",
+                  "STI","STL","STSW","STX","SUB","TD",
+                  "TIX","WD"},
+       op_values[32][100]={"18","58","40","28","24","3C","30","34",
+                   "38","48","00","68","50","08","04","D0",
+                   "20","D8","44","4C","EC","0C","78","54",
+                   "D4","14","E8","10","1C","E0","2C","DC"};
 	FILE *f1,*f2,*f3,*f4,*f5,*f6;
 	int i=2,j=0,k=0,count=0,p=0,flag=0;
 	char inst[100],temp[100],hex[10],leng[10],trec[100][10],len[10][10],pname[100];
@@ -58,10 +69,15 @@ void main()
                     temp[k++]=inst[j++];
                 } 
                 temp[k]='\0';
+                int temp1=atoi(temp);
+               
+                sprintf(temp,"%06d",temp1);
                 fscanf(f4,"%s",leng);
-                fprintf(f2, "H^%s^%06s^%06s^\n",pname,temp,leng );
-                sprintf(hex,"%06s",temp);
-                strcpy(trec[1],hex);
+                printf("%s",leng);
+                int temp2=hexadecimalToDecimal(leng);
+                //printf("\n%d",temp2);
+                fprintf(f2, "H^%s^%s^%x^\n",pname,temp,temp2 );
+                strcpy(trec[1],temp);
                 flag=1;  
         }
         else
@@ -79,33 +95,16 @@ void main()
             while(inst[j]!=' ')
             	opc[k++]=inst[j++];
             opc[k]='\0';
-
-            f5 = fopen("OPTAB.txt","r");
             char line[100],check[10];
-
-            while(!feof(f5))
+            int z=0;
+            while(z<32)
             {
-            	k=0;
-            	fgets(line,100,f5);
-                
-            	int l=0;
-            	while(line[k]!=' ')
-                	check[l++]=line[k++];
-                check[l]='\0';
-               
-                while(line[k]==' ')
-                	k++;
-                l=0;
-                if(strcmp(opc,check)==0)
+                if(strcmp(opc,optab[z])==0)
                 {
-                    while(line[k]!='\n')
-                        { 
-                        opval[l++]=line[k++];
-                        }
-                       opval[l]='\0';  
+                    strcpy(opval,op_values[z]);
                 }
                 	
-                  
+                z++;  
 
             }
               
@@ -128,10 +127,10 @@ void main()
                     n=atoi(opr);
                     val=val+3*n;
                     char con[10];
-                    sprintf(con,"%x",val);
-                    sprintf(hex,"%06s",con);
+                    sprintf(con,"%06x",val);
+                    sprintf(hex,"%s",con);
                     strcpy(trec[i++],hex);
-                    itoa(count,len[p++],10);
+                    sprintf(len[p++],"%d",count);
                     count=0;
                 }    
                 
@@ -151,9 +150,9 @@ void main()
                     {
                         strcpy(trec[i++],"|");
                         strcpy(trec[i++],"T");
-                        sprintf(hex,"%06s",adr);
+                        sprintf(hex,"%s",adr);
                         strcpy(trec[i++],hex);
-                        itoa(count,len[p++],10);
+                        sprintf(len[p++],"%d",count);
                         count=0;
                     }
                     int l=0,m=0;
@@ -183,9 +182,9 @@ void main()
                     {
                         strcpy(trec[i++],"|");
                         strcpy(trec[i++],"T");
-                        sprintf(hex,"%06s",adr);
+                        sprintf(hex,"%s",adr);
                         strcpy(trec[i++],hex);
-                        itoa(count,len[p++],10);
+                        sprintf(len[p++],"%d",count);
                         count=0;
                     }
 
@@ -200,9 +199,9 @@ void main()
                 {
                     strcpy(trec[i++],"|");
                     strcpy(trec[i++],"T");
-                    sprintf(hex,"%06s",adr);
+                    sprintf(hex,"%s",adr);
                     strcpy(trec[i++],hex);
-                    itoa(count,len[p++],10);
+                    sprintf(len[p++],"%d",count);
                     count=0;
                 }  
                 int n;
@@ -217,9 +216,9 @@ void main()
                 {
                     strcpy(trec[i++],"|");
                     strcpy(trec[i++],"T");
-                    sprintf(hex,"%06s",adr);
+                    sprintf(hex,"%s",adr);
                     strcpy(trec[i++],hex);
-                    itoa(count,len[p++],10);
+                    sprintf(len[p++],"%d",count);
                     count=0;
                 }  
                 strcpy(trec[i++],"4c0000");
@@ -228,7 +227,7 @@ void main()
             else if(strcmp(opc,"END")==0)
             {
                     strcpy(trec[i++],"|");
-                    itoa(count,len[p++],10);
+                    sprintf(len[p++],"%d",count);
                     count=0;
                     break;
             }
@@ -286,9 +285,9 @@ void main()
                     {
                     strcpy(trec[i++],"|");
                     strcpy(trec[i++],"T");
-                    sprintf(hex,"%06s",adr);
+                    sprintf(hex,"%s",adr);
                     strcpy(trec[i++],hex);
-                    itoa(count,len[p++],10);
+                   sprintf(len[p++],"%d",count);
                     count=0;
                     }  
                     if(opr[strlen(opr)-1]=='X' && opr[strlen(opr)-2]==',')
@@ -298,11 +297,11 @@ void main()
                         ind[1]='\0';
                         int n=atoi(ind);
                         int z=n^8;
-                        itoa(z,ind,16); 
+                        sprintf(ind,"%x",z); 
                         opradr[0]=ind[0];
                         int l=0,r=0;
                         k=0;
-                        sprintf(rval,"%04s",opradr);
+                        sprintf(rval,"%s",opradr);
                         while(l<strlen(opval))
                         {
                             trec[i][l]=opval[l];
@@ -323,7 +322,7 @@ void main()
                         char rval[10];
                         int l=0,r=0;
                         k=0;
-                        sprintf(rval,"%04s",opradr);
+                        sprintf(rval,"%s",opradr);
                         while(l<strlen(opval))
                         {
                             trec[i][l]=opval[l];

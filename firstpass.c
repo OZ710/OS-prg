@@ -18,7 +18,7 @@ int hexadecimalToDecimal(char hexVal[])
             dec_val += (hexVal[i] - 48)*base; 
             base = base * 16; 
         } 
-        else if (hexVal[i]>='A' && hexVal[i]<='F') 
+        else if ((hexVal[i]>='A' && hexVal[i]<='F') ||(hexVal[i]>='A' && hexVal[i]<='F') ) 
         { 
             dec_val += (hexVal[i] - 55)*base;  
             base = base*16; 
@@ -35,7 +35,7 @@ void main()
                   "RD","OR","RSUB","SSK","STA","STB","STCH",
                   "STI","STL","STSW","STX","SUB","TD",
                   "TIX","WD"},
-       ov_values[32][100]={"18","58","40","28","24","3C","30","34",
+       op_values[32][100]={"18","58","40","28","24","3C","30","34",
                    "38","48","00","68","50","08","04","D0",
                    "20","D8","44","4C","EC","0C","78","54",
                    "D4","14","E8","10","1C","E0","2C","DC"};
