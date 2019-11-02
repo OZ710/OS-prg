@@ -1,25 +1,32 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<math.h>
 int hexadecimalToDecimal(char hexVal[]) 
 {    
     int le = strlen(hexVal); 
-    int base = 1; 
+    le--;
+    int base = 1,val;
     int dec_val = 0;  
-    for (int i=le-1; i>=0; i--) 
+    for (int i=0; hexVal[i]!='\0'; i++) 
     {     
         if (hexVal[i]>='0' && hexVal[i]<='9') 
         { 
-            dec_val += (hexVal[i] - 48)*base; 
-            base = base * 16; 
+             val=hexVal[i]-48; 
         } 
-        else if ((hexVal[i]>='A' && hexVal[i]<='F') || (hexVal[i]>='a' && hexVal[i]<='f')) 
+        else if (hexVal[i]>='A' && hexVal[i]<='F') 
         { 
-            dec_val += (hexVal[i] - 55)*base;  
-            base = base*16; 
+            val = hexVal[i] - 65 + 10;
         } 
-printf("\n%d",dec_val);
+        else if(hexVal[i]>='a' && hexVal[i]<='f')
+        {
+            val = hexVal[i] - 97 + 10;
+        }
+
+       dec_val+=val*pow(16,le);
+       le--;
     } 
+printf("\n%d\n",dec_val);
       
     return dec_val; 
 } 
@@ -73,7 +80,7 @@ void main()
                
                 sprintf(temp,"%06d",temp1);
                 fscanf(f4,"%s",leng);
-                printf("%s",leng);
+                //printf("%s",leng);
                 int temp2=hexadecimalToDecimal(leng);
                 //printf("\n%d",temp2);
                 fprintf(f2, "H^%s^%s^%x^\n",pname,temp,temp2 );
@@ -355,7 +362,10 @@ void main()
         }
         else
         {
-            fprintf(f2,"%s^",trec[q] );
+            if(strlen(trec[q])==4)
+             fprintf(f2,"00%s^",trec[q] );
+            else
+              fprintf(f2,"%s^",trec[q] );
             count++;
             if(count==2)
             {
